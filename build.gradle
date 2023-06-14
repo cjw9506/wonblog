@@ -1,8 +1,26 @@
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.1.0'
 	id 'io.spring.dependency-management' version '1.1.0'
+	id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
+	// snippetsDir : 테스트 실행시 생성되는 응답을 저장할 디렉토리 지정
+}
+
+configurations {
+	asciidoctorExtensions
+	// asciidoctorExtensions : Asciidoctor의 확장 기능을 사용하기 위한 설정
+}
+
 
 group = 'com.wonblog'
 version = '0.0.1-SNAPSHOT'
@@ -22,11 +40,56 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
 
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	annotationProcessor 'org.projectlombok:lombok'
+
+	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.h2database:h2'
+}
+
+tasks.named('asciidoctor') {
+	configurations "asciidoctorExtensions"
+	inputs.dir snippetsDir
+	dependsOn test
+}
+
+task copyDocument(type: Copy) {
+	dependsOn asciidoctor            // (8-1)
+	from file("${asciidoctor.outputDir}")   // (8-2)
+	into file("src/main/resources/static/docs")   // (8-3)
+}
+
+build {
+	dependsOn copyDocument  // (9) 빌드되기전 copyDocument task 실행
+}
+
+bootJar {
+	dependsOn copyDocument    // (10-1) bootJar 실행되기전 copyDocument task 실행
+	from ("${asciidoctor.outputDir}") {  // (10-2) bootJar에 asciidoctor task에서 생성된 html 파일 추가
+		into 'static/docs'     // (10-3) bootJar에 추가될 경로
+	}
+}
+
+def generated = 'src/main/generated'
+
+tasks.withType(JavaCompile) {
+	options.getGeneratedSourceOutputDirectory().set(file(generated))
+}
+
+sourceSets {
+	main.java.srcDirs += [ generated ]
+}
+
+clean {
+	delete file(generated)
 }
 
 tasks.named('test') {
