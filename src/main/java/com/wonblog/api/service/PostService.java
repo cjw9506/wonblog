@@ -42,6 +42,7 @@ public class PostService {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .author(post.getAuthor())
+                .createdAt(post.getCreatedAt())
                 .build();
 
         return response;
@@ -55,6 +56,7 @@ public class PostService {
                             .title(post.getTitle())
                             .content(post.getContent())
                             .author(post.getAuthor())
+                            .createdAt(post.getCreatedAt())
                             .build())
                 .collect(Collectors.toList());
     }
