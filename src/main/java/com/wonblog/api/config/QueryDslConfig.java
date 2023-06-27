@@ -1,5 +1,6 @@
 package com.wonblog.api.config;
 
+import com.querydsl.core.annotations.Config;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -10,10 +11,10 @@ import org.springframework.context.annotation.Configuration;
 public class QueryDslConfig {
 
     @PersistenceContext
-    public EntityManager em;
+    private EntityManager em;
 
     @Bean
-    public JPAQueryFactory JPAQueryFactory() {
+    public JPAQueryFactory QueryDslConfig() {
         return new JPAQueryFactory(em);
     }
 }
