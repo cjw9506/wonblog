@@ -12,7 +12,7 @@ const router = useRouter();
 
 const write = function () {
   axios
-    .post("/api/posts", {
+    .post("http://13.209.214.190:8080/posts", {
       title: title.value,
       author: author.value,
       content: content.value,

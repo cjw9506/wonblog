@@ -47,7 +47,7 @@ const moveToEditComment = (commentId: number | string) => {
 
 const writeComment = function () {
   axios
-    .post(`/api/posts/${props.postId}/comments`, {
+    .post(`http://13.209.214.190:8080/posts/${props.postId}/comments`, {
       writer: writer.value,
       content: content.value,
     })
@@ -62,7 +62,7 @@ const writeComment = function () {
 
 const getComments = () => {
   axios
-    .get(`/api/posts/${props.postId}/comments?page=1&size=5`)
+    .get(`http://13.209.214.190:8080/posts/${props.postId}/comments?page=1&size=5`)
     .then((response) => {
       comments.value = response.data;
     })
@@ -73,7 +73,7 @@ const getComments = () => {
 
 onMounted(() => {
   axios
-    .get(`/api/posts/${props.postId}`)
+    .get(`http://13.209.214.190:8080/posts/${props.postId}`)
     .then((response) => {
       post.value = response.data;
     })

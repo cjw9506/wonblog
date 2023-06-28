@@ -22,7 +22,7 @@ const props = defineProps({
 });
 
 axios
-  .get(`/api/posts/${props.postId}/comments/${props.commentId}`)
+  .get(`http://13.209.214.190:8080/posts/${props.postId}/comments/${props.commentId}`)
   .then((response) => {
     comment.value = response.data;
   })
@@ -32,7 +32,7 @@ axios
 
 const editComment = () => {
   axios
-    .patch(`http://13.209.214.190:8080/api/posts/${props.postId}/comments/${props.commentId}`, comment.value)
+    .patch(`http://13.209.214.190:8080/posts/${props.postId}/comments/${props.commentId}`, comment.value)
     .then(() => {
           router.push({ name: "read", params: { postId: props.postId } });
     })

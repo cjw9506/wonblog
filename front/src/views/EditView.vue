@@ -20,12 +20,12 @@ const props = defineProps({
   },
 });
 
-axios.get(`/api/posts/${props.postId}`).then((response) => {
+axios.get(`http://13.209.214.190:8080/posts/${props.postId}`).then((response) => {
   post.value = response.data;
 });
 
 const edit = () => {
-  axios.patch(`/api/posts/${props.postId}`, post.value).then(() => {
+  axios.patch(`http://13.209.214.190:8080/posts/${props.postId}`, post.value).then(() => {
     router.replace({ name: "home" });
   });
 };
