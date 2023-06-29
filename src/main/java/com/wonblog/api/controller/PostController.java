@@ -1,6 +1,5 @@
 package com.wonblog.api.controller;
 
-import com.wonblog.api.domain.Post;
 import com.wonblog.api.dto.request.PostCreate;
 import com.wonblog.api.dto.request.PostEdit;
 import com.wonblog.api.dto.request.PostSearch;
@@ -11,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 
